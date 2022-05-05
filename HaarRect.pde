@@ -31,8 +31,3 @@ class HaarRect{
 
 
 }
-
-
-
-
-

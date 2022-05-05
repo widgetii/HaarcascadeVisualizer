@@ -21,6 +21,3 @@ public class HaarRectSizeComparator implements Comparator {
   }
 
 }
-
-
-

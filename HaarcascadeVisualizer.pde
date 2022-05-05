@@ -41,7 +41,6 @@ boolean openFiles = false;
 // END Editable Parameters
 // ------------------------------------------------------------------------
 
-import processing.xml.*;
 import java.awt.Rectangle;
 import interfascia.*;
 
@@ -86,7 +85,7 @@ void setup() {
 
   Button button;
 
-  path = sketchPath; // an environment variable
+  path = sketchPath(); // an environment variable
 
   // Replace with your face or use Lena
   img = loadImage("face.jpg");
@@ -160,7 +159,7 @@ void checkForProcess() {
   if (doProcess) {
     textAlpha = 255;
     String name = cascadeFile;
-    String path = sketchPath +"/";
+    String path = sketchPath() +"/";
     File f = new File(dataPath(path+cascadeFile));
     if (f.exists() && name.length() > 0)
     {
@@ -190,7 +189,7 @@ void actionPerformed (GUIEvent e) {
 
 void doProcessing() {
   String name = cascadeFile;
-  String path = sketchPath +"/";
+  String path = sketchPath() +"/";
   println(path+name);
   stages = doLoadXML(path+name);
   String[] pieces = split(name, '.');
@@ -222,7 +221,7 @@ void renderPreviews(String name) {
   int renderCols = ceil(renderWidth/(imgSize+margin));
   renderWidth = renderCols*(imgSize+margin)+(margin);
   int renderHeight = (ceil(stages.size()/(float)renderCols)*(imgSize+margin))+(margin);
-  PGraphics container = createGraphics(renderWidth, renderHeight, P2D);
+  PGraphics container = createGraphics(renderWidth, renderHeight, JAVA2D);
   container.beginDraw();
   container.background(imgBgColor);
   container.endDraw();
@@ -300,96 +299,5 @@ void renderStages(String name) {
   }
 
   // Open folder
-  open(sketchPath + "/" + name + "/.");
+  //open(sketchPath() + "/" + name + "/.");
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

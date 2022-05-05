@@ -4,7 +4,7 @@ Here's a visualizer I made that allows you to render the haarfeatures from the c
 
 Notes:
 
-1. The XML library changed in Processing 2.0 and is causing problems with getChild(). I added the old XML library from 1.5 to my libraries location for the sketch to run. This will need to be fixed>
+1. Tested with Processing 3.5.4
 
 2. You can change the cascade file in the top of the sketch
 

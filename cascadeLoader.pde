@@ -2,39 +2,43 @@
 ArrayList doLoadXML(String file){ 
   ArrayList returnList = new ArrayList();
 
-  XMLElement xml = new XMLElement(this,file);
-  xml = xml.getChild(0);
+  XML xml = loadXML(file);
+  xml = xml.getChild(1);
 
-  String sampleSizeStr = (xml.getChild(0).getContent().trim());//size
+  String sampleSizeStr = (xml.getChild("size").getContent().trim());//size
   sampleSize = int(split(sampleSizeStr," "));
 
-  XMLElement returnListNode = xml.getChild(1);//returnList
+  XML returnListNode = xml.getChild("stages");//returnList
   int numReturnList = returnListNode.getChildCount();
-  
 
   for(int i=0;i<numReturnList;i++){//20 returnList in this file
-
-    XMLElement treesNode = returnListNode.getChild(i).getChild(0);
+    XML treesNode = returnListNode.getChild(i);
+    if (treesNode.getName() == "#text") continue;
+    treesNode = treesNode.getChild("trees");
     int numTrees = treesNode.getChildCount();
 
     ArrayList trees = new ArrayList();// holder of nodes
 
     for(int j=0;j<numTrees;j++){
-      int numNodes = treesNode.getChild(j).getChildCount();      
+      if (treesNode.getChild(j).getName() == "#text") continue;
+
+      int numNodes = treesNode.getChild(j).getChildCount();
 
       ArrayList nodes = new ArrayList();
       for(int n=0;n<numNodes;n++){
-        XMLElement node = treesNode.getChild(j).getChild(n);
-        XMLElement feature = node.getChild(0);
-
-        XMLElement rectsNode = feature.getChild(0);
+        XML node = treesNode.getChild(j).getChild(n);
+        if (node.getName() == "#text" || node.getName() == "#comment") continue;
+        XML feature = node.getChild("feature");
+        XML rectsNode = feature.getChild("rects");
         int numRects = rectsNode.getChildCount();
 
-        HaarRect[] haarRects = new HaarRect[numRects];
-        int[] weights = new int[numRects];
+        ArrayList<HaarRect> haarRects = new ArrayList<HaarRect>();
 
         for(int k=0;k<numRects;k++){
-          XMLElement kid = rectsNode.getChild(k);
+          XML kid = rectsNode.getChild(k);
+          if (kid.getName() == "#text") {
+            continue;
+          }
 
           String[] rStr = split(kid.getContent().trim()," ");
 
@@ -44,35 +48,23 @@ ArrayList doLoadXML(String file){
             coords[l] = int(rStr[l]); 
           }
 
-          HaarRect hr = new HaarRect(coords);
-          haarRects[k] = hr;
-
+          haarRects.add(new HaarRect(coords));
         }
 
-        boolean tilted = boolean(feature.getChild(1).getContent());
+        boolean tilted = boolean(feature.getChild("tilted").getContent());
+        float threshold = float(node.getChild("threshold").getContent().trim());
         float leftVal = 0;
         float rightVal = 0;
         int rightNode = 0;
         int leftNode = 0;
-        float threshold = float(node.getChild(2).getContent().trim());
-
-        for(int l=3;l<node.getChildCount();l++){
-          String nName = node.getChild(l).getName();
-          XMLElement kid = node.getChild(l);
-
-          if(node.getName().equals("left_val")){
-            leftVal = float(kid.getContent().trim());
-          } 
-          else if (nName.equals("left_node")){
-            leftNode = int(kid.getContent().trim());
-          } 
-          else if(nName.equals("right_val")){
-            rightVal = float(kid.getContent().trim());
-          } 
-          else if(nName.equals("right_node")){
-            rightNode = int(kid.getContent().trim());
-          }
-        }//end for rest of inside the node
+        if (node.getChild("left_val") != null)
+          leftVal = float(node.getChild("left_val").getContent().trim());
+        if (node.getChild("right_val") != null)
+          rightVal = float(node.getChild("right_val").getContent().trim());
+        if (node.getChild("right_node") != null)
+        rightNode = int(node.getChild("right_node").getContent().trim());
+        if (node.getChild("left_node") != null)
+        leftNode = int(node.getChild("left_node").getContent().trim());
         nodes.add(new Node(haarRects,tilted,threshold,leftVal,rightVal,leftNode,rightNode));
       }// end nodes loop
 
@@ -90,6 +82,3 @@ ArrayList doLoadXML(String file){
 
   return returnList;
 }
-
-
-

@@ -27,7 +27,7 @@ class Tree{
 
   PGraphics render(int imgSize,float stageScale,int maxItems){
 
-    PGraphics pg = createGraphics(imgSize,imgSize,P2D);
+    PGraphics pg = createGraphics(imgSize,imgSize,JAVA2D);
 
     for(int i = 0;i<nodes.size();i++){//for each node
 
@@ -91,44 +91,3 @@ class Tree{
 
 
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
